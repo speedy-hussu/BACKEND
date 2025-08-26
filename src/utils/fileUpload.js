@@ -20,3 +20,4 @@ const uploadFile = async (filePath) => {
     return null;
   }
 };
+export {uploadFile}
