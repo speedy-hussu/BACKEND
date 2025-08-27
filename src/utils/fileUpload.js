@@ -1,6 +1,6 @@
 import { v2 } from "cloudinary";
 import fs from "fs";
-
+console.log(process.env.CLOUDINARY_APIKEY, process.env.CLOUDINARY_API_SECRET);
 v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_APIKEY,
@@ -14,8 +14,10 @@ const uploadFile = async (filePath) => {
       return null;
     }
     console.log("Uploading file:", filePath);
-    const response = await v2.uploader.upload(filePath, { resource_type: "auto" });
-    console.log("Cloudinary response:", response);
+    const response = await v2.uploader.upload(filePath, {
+      resource_type: "auto",
+    });
+
 
     fs.unlinkSync(filePath); // Delete local file after upload
     return response;

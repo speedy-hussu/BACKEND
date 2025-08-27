@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/apiError.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 import { uploadFile } from "../utils/fileUpload.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 const registerUser = asyncHandler(async (req, res) => {
@@ -23,9 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
   const avatarLocalPath = req.files?.avatar?.[0]?.path;
   const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
-  console.log("Avatar Path:", avatarLocalPath);
-  console.log("Cover Path:", coverImageLocalPath);
-
+ 
   if (!avatarLocalPath) throw new ApiError(400, "Avatar is required");
   const avatar = await uploadFile(avatarLocalPath);
 
