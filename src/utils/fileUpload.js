@@ -8,11 +8,13 @@ v2.config({
 
 const uploadFile = async (filePath) => {
   try {
-    if (!filePath) return null;
+    if (!filePath) return console.log("No file path provided");
     const response = await v2.uploader.upload(filePath, {
       resource_type: "auto",
     });
     console.log("File uploaded successfully", response.url);
+    console.log("Uploading file from:", filePath);
+    console.log("Cloud name:", process.env.CLOUDINARY_CLOUD_NAME);
 
     return response;
   } catch (error) {
@@ -20,4 +22,4 @@ const uploadFile = async (filePath) => {
     return null;
   }
 };
-export {uploadFile}
+export { uploadFile };
