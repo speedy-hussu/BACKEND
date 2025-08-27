@@ -1,6 +1,6 @@
-import { ApiError } from "./apiError.js";
+import { ApiError } from "./ApiError.js";
 import { asyncHandler } from "./asyncHandler.js";
-import { ApiResponse } from "./apiResponse.js";
+import { ApiResponse } from "./ApiResponse.js";
 import { uploadFile } from "./fileUpload.js";
 
 export { ApiError, asyncHandler, ApiResponse, uploadFile };
