@@ -1,5 +1,6 @@
 import { v2 } from "cloudinary";
 import fs from "fs";
+
 v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_APIKEY,
@@ -8,18 +9,21 @@ v2.config({
 
 const uploadFile = async (filePath) => {
   try {
-    if (!filePath) return console.log("No file path provided");
-    const response = await v2.uploader.upload(filePath, {
-      resource_type: "auto",
-    });
-    console.log("File uploaded successfully", response.url);
-    console.log("Uploading file from:", filePath);
-    console.log("Cloud name:", process.env.CLOUDINARY_CLOUD_NAME);
+    if (!filePath) {
+      console.log("No file path provided");
+      return null;
+    }
+    console.log("Uploading file:", filePath);
+    const response = await v2.uploader.upload(filePath, { resource_type: "auto" });
+    console.log("Cloudinary response:", response);
 
+    fs.unlinkSync(filePath); // Delete local file after upload
     return response;
   } catch (error) {
-    fs.unlinkSync(filePath); // Delete the file if upload fails
+    console.error("Cloudinary upload failed:", error);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     return null;
   }
 };
+
 export { uploadFile };
