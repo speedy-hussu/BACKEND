@@ -3,6 +3,7 @@ import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { uploadFile } from "../utils/fileUpload.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import jwt from "jsonwebtoken";
 
 //generate access and refresh token
 const generateAccessAndRefreshToken = async (userId) => {
@@ -97,7 +98,7 @@ const loginUser = asyncHandler(async (req, res) => {
   //cookies
   const option = {
     httpOnly: true,
-    secure:false
+    secure: false,
   };
   res
     .status(200)
@@ -138,4 +139,42 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, null, "Logged out successfully"));
 });
 
-export { registerUser, loginUser, logoutUser };
+const refreshAccessToken = asyncHandler(async (req, res) => {
+  const incomingRefreshToken = req.cookies.refreshToken;
+  if (!refreshAccessToken) throw new ApiError(401, "unautorized request ");
+
+  try {
+    const decodedToken = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    const user = await User.findById(decodedToken?._id);
+    if (!user) throw new ApiError(401, "invalid token or user not found");
+
+    const option = {
+      httpOnly: true,
+      secure: false,
+    };
+    if (user.refreshToken !== incomingRefreshToken)
+      throw new ApiError(401, "expired token or invalid token");
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+      user._id
+    );
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, option)
+      .cookie("refreshToken", refreshToken, option)
+      .json(
+        new ApiResponse(
+          200,
+          { accessToken, refreshToken },
+          "Access token refreshed successfully"
+        )
+      );
+  } catch (error) {
+    throw new ApiError(401, "invalid refresh token" + error.message);
+  }
+});
+export { registerUser, loginUser, logoutUser, refreshAccessToken };
