@@ -10,9 +10,7 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  console.log("METHOD:", req.method);
-  console.log("URL:", req.url);
-  console.log("CONTENT-TYPE:", req.headers["content-type"]);
+  
   next();
 });
 

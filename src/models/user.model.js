@@ -49,14 +49,14 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 UserSchema.pre("save", async function (next) {
-  if (this.isModified("password")) return next();
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 UserSchema.methods.isPassCorrect = async function (pass) {
-  return bcrypt.compare(pass, this, password);
+  return bcrypt.compare(pass, this.password);
 };
-UserSchema.methods.generateAccesToken = function (pass) {
+UserSchema.methods.generateAccessToken = function (pass) {
   return jwt.sign(
     {
       _id: this._id,
