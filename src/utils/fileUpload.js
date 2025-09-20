@@ -1,5 +1,6 @@
 import { v2 } from "cloudinary";
 import fs from "fs";
+
 console.log(process.env.CLOUDINARY_APIKEY, process.env.CLOUDINARY_API_SECRET);
 v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -18,7 +19,6 @@ const uploadFile = async (filePath) => {
       resource_type: "auto",
     });
 
-
     fs.unlinkSync(filePath); // Delete local file after upload
     return response;
   } catch (error) {
@@ -27,5 +27,19 @@ const uploadFile = async (filePath) => {
     return null;
   }
 };
+const deleteFile = async (fileID) => {
+  try {
+    if (!filePath) {
+      console.log("no file path to remove");
+      return null;
+    }
+    const response = await v2.uploader.destroy(filePath, {
+      resource_type: auto,
+    });
+    return response;
+  } catch (error) {
+    console.log("error occur while deleting file", error);
+  }
+};
 
-export { uploadFile };
+export { uploadFile, deleteFile };
