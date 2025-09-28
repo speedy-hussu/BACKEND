@@ -10,7 +10,6 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  
   next();
 });
 
@@ -21,5 +20,7 @@ app.use(cookieParser());
 
 //routed
 import userRoutes from "./routes/user.routes.js";
+import tweetRoutes from "./routes/tweet.routes.js";
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/tweets", tweetRoutes);
 export { app };
