@@ -9,5 +9,5 @@ const CommentSchema = new Schema(
   },
   { timestamps: true }
 );
-commentSchema.plugin(mongooseAggregatePaginate);
+CommentSchema.plugin(mongooseAggregatePaginate);
 export const Comment = mongoose.model("Comment", CommentSchema);
